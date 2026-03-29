@@ -1,0 +1,32 @@
+# Apache clean URL configuration for yassinekelai.com
+Options -MultiViews
+RewriteEngine On
+RewriteBase /
+
+# Force direct access to .html files to their clean path
+RewriteCond %{THE_REQUEST} \s/+(.+?)\.html[\s?] [NC]
+RewriteRule ^ %1 [R=301,L]
+
+# Serve existing files and directories as-is
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Map clean paths to .html files
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]
+
+# Root loads index.html automatically
+DirectoryIndex index.html
+
+# ---------------- NGINX EQUIVALENT ----------------
+# location / {
+#   try_files $uri $uri/ $uri.html /index.html;
+# }
+#
+# location = /index.html {
+#   return 301 /;
+# }
+#
+# rewrite ^/(.+)\.html$ /$1 permanent;
+# --------------------------------------------------
